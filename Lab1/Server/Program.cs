@@ -1,103 +1,86 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-//using System.Text.Json;
-using System.Threading;
 
 namespace Server
 {
     class Program
     {
-        static readonly object _lock = new object();
-        static readonly Dictionary<int, Socket> _clients = new Dictionary<int, Socket>();
+        private static string _ip = "127.0.0.1";
+        private static int _port = 3000;
+        private static int[] _clientsPorts = {3001};
 
-        static void Main(string[] args)
+        static void Main()
         {
-            //Connection connection = JsonSerializer.Deserialize<Connection>(File.ReadAllText("app.config.json"));
-            Connection connection = new Connection()
-            {
-                Ip = "127.0.0.1",
-                Port = 3000,
-                LimitConectors = 3
-            };
-            IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(connection.Ip), connection.Port);
-            Socket listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            int count = 1;
-
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);;
             try
             {
-                listenSocket.Bind(ipPoint);
-                listenSocket.Listen(connection.LimitConectors);
-
-                Console.WriteLine($"Server {connection.ConnectionString} started");
+                Task receiveTask = new Task(() => Receive(socket));
+                receiveTask.Start();
 
                 while (true)
                 {
-                    Socket client = listenSocket.Accept();
-                    lock (_lock) _clients.Add(count, client);
+                    string message = Console.ReadLine();
 
-                    Console.WriteLine($"New client #{count} connected");
-
-                    Thread thread = new Thread(HandleClients);
-                    thread.Start(count);
-                    count++;
+                    byte[] data = Encoding.Unicode.GetBytes(message);
+                    foreach (var remotePort in _clientsPorts)
+                    {
+                        EndPoint receiverEndPoint = new IPEndPoint(IPAddress.Parse(_ip), remotePort);
+                        socket.SendTo(data, receiverEndPoint);
+                    }
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(exception);
+            }
+            finally
+            {
+                Close(socket);
             }
         }
 
-        public static void HandleClients(object o)
+        private static void Receive(Socket socket)
         {
-            int id = (int)o;
-            Socket client;
-
-            lock (_lock) client = _clients[id];
-
-            while (true)
+            try
             {
-                try
-                {
+                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(_ip), _port);
+                socket.Bind(ipEndPoint);
 
+                while (true)
+                {
                     StringBuilder str = new StringBuilder();
-                    int bytes;
                     byte[] data = new byte[256];
+                    EndPoint senderEndPoint = new IPEndPoint(IPAddress.Any, 0);
                     do
                     {
-                        bytes = client.Receive(data);
+                        var bytes = socket.ReceiveFrom(data, ref senderEndPoint);
                         str.Append(Encoding.Unicode.GetString(data, 0, bytes));
                     }
-                    while (client.Available > 0);
+                    while (socket.Available > 0);
 
-                    string mes = $"{DateTime.Now} #{id}: {str}";
-                    Console.WriteLine(mes);
-                    Send(mes);
+                    var senderIpEndPoint = (IPEndPoint)senderEndPoint;
+                    Console.WriteLine($"{senderIpEndPoint.Address}:{senderIpEndPoint.Port} {str}");
                 }
-                catch (Exception e)
-                {
-                    lock (_lock) _clients.Remove(id);
-                    client.Shutdown(SocketShutdown.Both);
-                    client.Close();
-                    Console.WriteLine($"Client #{id} disconnected");
-                    Thread.CurrentThread.Join();
-                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+            finally
+            {
+                Close(socket);
             }
         }
 
-        public static void Send(string str)
+        private static void Close(Socket socket)
         {
-            lock (_lock)
+            if (socket != null)
             {
-                byte[] data = Encoding.Unicode.GetBytes(str);
-                foreach (Socket c in _clients.Values)
-                {
-                    c.Send(data);
-                }
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
             }
         }
     }
