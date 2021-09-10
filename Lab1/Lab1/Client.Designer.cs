@@ -1,7 +1,7 @@
 ﻿
 namespace Lab1
 {
-    partial class Form1
+    partial class Client
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -29,50 +29,43 @@ namespace Lab1
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbMessage = new System.Windows.Forms.TextBox();
+            this.btSend = new System.Windows.Forms.Button();
+            this.tbServerAdress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.tbNickname = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btConnect = new System.Windows.Forms.Button();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.lbChat = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
-            // listBox1
+            // tbMessage
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(238, 12);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(550, 394);
-            this.listBox1.TabIndex = 0;
+            this.tbMessage.Location = new System.Drawing.Point(238, 418);
+            this.tbMessage.Name = "tbMessage";
+            this.tbMessage.Size = new System.Drawing.Size(450, 20);
+            this.tbMessage.TabIndex = 1;
             // 
-            // textBox1
+            // btSend
             // 
-            this.textBox1.Location = new System.Drawing.Point(238, 418);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(450, 20);
-            this.textBox1.TabIndex = 1;
+            this.btSend.Location = new System.Drawing.Point(698, 418);
+            this.btSend.Name = "btSend";
+            this.btSend.Size = new System.Drawing.Size(90, 20);
+            this.btSend.TabIndex = 2;
+            this.btSend.Text = "Отправить";
+            this.btSend.UseVisualStyleBackColor = true;
+            this.btSend.Click += new System.EventHandler(this.SendClick);
             // 
-            // button1
+            // tbServerAdress
             // 
-            this.button1.Location = new System.Drawing.Point(698, 418);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(90, 20);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Отправить";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(82, 12);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(150, 20);
-            this.textBox2.TabIndex = 6;
-            this.textBox2.Text = "127.0.0.1:3000";
+            this.tbServerAdress.Location = new System.Drawing.Point(82, 12);
+            this.tbServerAdress.Name = "tbServerAdress";
+            this.tbServerAdress.Size = new System.Drawing.Size(150, 20);
+            this.tbServerAdress.TabIndex = 6;
+            this.tbServerAdress.Text = "127.0.0.1:3000";
             // 
             // label1
             // 
@@ -84,13 +77,13 @@ namespace Lab1
             this.label1.TabIndex = 5;
             this.label1.Text = "Сервер";
             // 
-            // textBox3
+            // tbNickname
             // 
-            this.textBox3.Location = new System.Drawing.Point(82, 38);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(150, 20);
-            this.textBox3.TabIndex = 8;
-            this.textBox3.Text = "Littleduck";
+            this.tbNickname.Location = new System.Drawing.Point(82, 38);
+            this.tbNickname.Name = "tbNickname";
+            this.tbNickname.Size = new System.Drawing.Size(150, 20);
+            this.tbNickname.TabIndex = 8;
+            this.tbNickname.Text = "Littleduck";
             // 
             // label2
             // 
@@ -102,14 +95,15 @@ namespace Lab1
             this.label2.TabIndex = 7;
             this.label2.Text = "Имя";
             // 
-            // button2
+            // btConnect
             // 
-            this.button2.Location = new System.Drawing.Point(17, 64);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(215, 20);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Подключиться";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btConnect.Location = new System.Drawing.Point(17, 64);
+            this.btConnect.Name = "btConnect";
+            this.btConnect.Size = new System.Drawing.Size(215, 20);
+            this.btConnect.TabIndex = 9;
+            this.btConnect.Text = "Подключиться";
+            this.btConnect.UseVisualStyleBackColor = true;
+            this.btConnect.Click += new System.EventHandler(this.ConnectClick);
             // 
             // listBox2
             // 
@@ -139,7 +133,15 @@ namespace Lab1
             this.label3.TabIndex = 12;
             this.label3.Text = "Участники:";
             // 
-            // Form1
+            // lbChat
+            // 
+            this.lbChat.FormattingEnabled = true;
+            this.lbChat.Location = new System.Drawing.Point(238, 12);
+            this.lbChat.Name = "lbChat";
+            this.lbChat.Size = new System.Drawing.Size(550, 394);
+            this.lbChat.TabIndex = 0;
+            // 
+            // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -147,15 +149,15 @@ namespace Lab1
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.listBox2);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.btConnect);
+            this.Controls.Add(this.tbNickname);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.tbServerAdress);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.listBox1);
-            this.Name = "Form1";
+            this.Controls.Add(this.btSend);
+            this.Controls.Add(this.tbMessage);
+            this.Controls.Add(this.lbChat);
+            this.Name = "Client";
             this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -163,18 +165,17 @@ namespace Lab1
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbMessage;
+        private System.Windows.Forms.Button btSend;
+        private System.Windows.Forms.TextBox tbServerAdress;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox tbNickname;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btConnect;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox lbChat;
     }
 }
 
