@@ -78,28 +78,15 @@ namespace Server
                     Console.WriteLine(mes);
                     Send(mes);
                 }
-                catch (SocketException e)
-                {
-                    if (e.SocketErrorCode == SocketError.ConnectionReset)
-                    {
-                        lock (_lock) _clients.Remove(id);
-                        client.Shutdown(SocketShutdown.Both);
-                        client.Close();
-                        Console.WriteLine($"Client #{id} disconnected");
-                        Thread.CurrentThread.Join();
-                    }
-
-                    Console.WriteLine(e);
-                }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    lock (_lock) _clients.Remove(id);
+                    client.Shutdown(SocketShutdown.Both);
+                    client.Close();
+                    Console.WriteLine($"Client #{id} disconnected");
+                    Thread.CurrentThread.Join();
                 }
             }
-
-            lock (_lock) _clients.Remove(id);
-            client.Shutdown(SocketShutdown.Both);
-            client.Close();
         }
 
         public static void Send(string str)
