@@ -71,16 +71,16 @@
             // 
             // tbMessage
             // 
-            this.tbMessage.Location = new System.Drawing.Point(40, 395);
+            this.tbMessage.Location = new System.Drawing.Point(167, 396);
             this.tbMessage.Name = "tbMessage";
-            this.tbMessage.Size = new System.Drawing.Size(168, 20);
+            this.tbMessage.Size = new System.Drawing.Size(302, 20);
             this.tbMessage.TabIndex = 3;
             // 
             // btConnect
             // 
-            this.btConnect.Location = new System.Drawing.Point(475, 28);
+            this.btConnect.Location = new System.Drawing.Point(413, 45);
             this.btConnect.Name = "btConnect";
-            this.btConnect.Size = new System.Drawing.Size(121, 19);
+            this.btConnect.Size = new System.Drawing.Size(121, 23);
             this.btConnect.TabIndex = 4;
             this.btConnect.Text = "Подключиться";
             this.btConnect.UseVisualStyleBackColor = true;
@@ -88,9 +88,9 @@
             // 
             // btSend
             // 
-            this.btSend.Location = new System.Drawing.Point(475, 396);
+            this.btSend.Location = new System.Drawing.Point(475, 386);
             this.btSend.Name = "btSend";
-            this.btSend.Size = new System.Drawing.Size(121, 19);
+            this.btSend.Size = new System.Drawing.Size(121, 35);
             this.btSend.TabIndex = 5;
             this.btSend.Text = "Отправить";
             this.btSend.UseVisualStyleBackColor = true;
@@ -98,9 +98,9 @@
             // 
             // btFile
             // 
-            this.btFile.Location = new System.Drawing.Point(214, 395);
+            this.btFile.Location = new System.Drawing.Point(40, 386);
             this.btFile.Name = "btFile";
-            this.btFile.Size = new System.Drawing.Size(121, 19);
+            this.btFile.Size = new System.Drawing.Size(121, 36);
             this.btFile.TabIndex = 6;
             this.btFile.Text = "Файл";
             this.btFile.UseVisualStyleBackColor = true;
@@ -113,7 +113,7 @@
             // lFileName
             // 
             this.lFileName.AutoSize = true;
-            this.lFileName.Location = new System.Drawing.Point(37, 418);
+            this.lFileName.Location = new System.Drawing.Point(37, 425);
             this.lFileName.Name = "lFileName";
             this.lFileName.Size = new System.Drawing.Size(35, 13);
             this.lFileName.TabIndex = 7;
@@ -175,7 +175,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 450);
+            this.ClientSize = new System.Drawing.Size(605, 450);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.label3);
@@ -191,7 +191,7 @@
             this.Controls.Add(this.tbMyAddress);
             this.Controls.Add(this.lbChat);
             this.Name = "Client";
-            this.Text = "Form1";
+            this.Text = "UdpClient";
             this.ResumeLayout(false);
             this.PerformLayout();
 
