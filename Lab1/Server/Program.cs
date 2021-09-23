@@ -63,19 +63,27 @@ namespace Server
                     var senderIpEndPoint = (IPEndPoint) senderEndPoint;
                     Console.WriteLine($"{DateTime.Now.ToString("dd.MM HH:mm:ss")} | {senderIpEndPoint.Address}:{senderIpEndPoint.Port} ({jsonMessage?.Value<string>("Name")}) | {jsonMessage?.Value<string>("Message")} | {jsonMessage?.Value<string>("FileName")}");
                     var clientKey = (senderIpEndPoint.Address.ToString(), senderIpEndPoint.Port);
-                    if (!_clients.ContainsKey(clientKey))
+                    if(jsonMessage?.Value<bool>("IsSystemMes") ?? false)
                     {
-                        _clients.Add(clientKey, jsonMessage?.Value<string>("Name"));
+                        if (!_clients.ContainsKey(clientKey))
+                        {
+                            _clients.Add(clientKey, jsonMessage?.Value<string>("Name"));
+                        }
+                        else
+                        {
+                            _clients[clientKey] = jsonMessage?.Value<string>("Name");
+                        }
                     }
                     else
                     {
-                        _clients[clientKey] = jsonMessage?.Value<string>("Name");
-                    }
-                    
-                    foreach (var client in _clients)
-                    {
-                        EndPoint receiverEndPoint = new IPEndPoint(IPAddress.Parse(client.Key.ip), client.Key.port);
-                        _socket.SendTo(data, receiverEndPoint);
+                        jsonMessage["Users"] = new JArray(new JArray(_clients.Select(_ => $"{jsonMessage?.Value<string>("Ip")}:{jsonMessage?.Value<string>("Port")} ({jsonMessage?.Value<string>("Name")})")));
+                        data = Encoding.Unicode.GetBytes(jsonMessage.ToString());
+
+                        foreach (var client in _clients)
+                        {
+                            EndPoint receiverEndPoint = new IPEndPoint(IPAddress.Parse(client.Key.ip), client.Key.port);
+                            _socket.SendTo(data, receiverEndPoint);
+                        }
                     }
                 }
             }

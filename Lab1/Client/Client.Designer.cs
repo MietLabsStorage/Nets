@@ -41,27 +41,29 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbPath = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbChat
             // 
             this.lbChat.FormattingEnabled = true;
-            this.lbChat.Location = new System.Drawing.Point(40, 64);
+            this.lbChat.Location = new System.Drawing.Point(40, 103);
             this.lbChat.Name = "lbChat";
-            this.lbChat.Size = new System.Drawing.Size(556, 316);
+            this.lbChat.Size = new System.Drawing.Size(556, 277);
             this.lbChat.TabIndex = 0;
             // 
             // tbMyAddress
             // 
-            this.tbMyAddress.Location = new System.Drawing.Point(38, 27);
+            this.tbMyAddress.Location = new System.Drawing.Point(40, 28);
             this.tbMyAddress.Name = "tbMyAddress";
-            this.tbMyAddress.Size = new System.Drawing.Size(120, 20);
+            this.tbMyAddress.Size = new System.Drawing.Size(133, 20);
             this.tbMyAddress.TabIndex = 1;
             this.tbMyAddress.Text = "127.0.0.1:3001";
             // 
             // tbSendAddress
             // 
-            this.tbSendAddress.Location = new System.Drawing.Point(185, 25);
+            this.tbSendAddress.Location = new System.Drawing.Point(40, 77);
             this.tbSendAddress.Name = "tbSendAddress";
             this.tbSendAddress.Size = new System.Drawing.Size(133, 20);
             this.tbSendAddress.TabIndex = 2;
@@ -129,7 +131,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(182, 9);
+            this.label2.Location = new System.Drawing.Point(37, 61);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(95, 13);
             this.label2.TabIndex = 9;
@@ -137,7 +139,7 @@
             // 
             // tbPath
             // 
-            this.tbPath.Location = new System.Drawing.Point(336, 25);
+            this.tbPath.Location = new System.Drawing.Point(214, 25);
             this.tbPath.Name = "tbPath";
             this.tbPath.Size = new System.Drawing.Size(133, 20);
             this.tbPath.TabIndex = 10;
@@ -146,17 +148,36 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(333, 9);
+            this.label3.Location = new System.Drawing.Point(211, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(116, 13);
             this.label3.TabIndex = 11;
             this.label3.Text = "Путь автосохранения";
             // 
+            // tbName
+            // 
+            this.tbName.Location = new System.Drawing.Point(214, 77);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(133, 20);
+            this.tbName.TabIndex = 12;
+            this.tbName.Text = "Jhoe";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(211, 61);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(29, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Имя";
+            // 
             // Client
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(812, 450);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.tbName);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.tbPath);
             this.Controls.Add(this.label2);
@@ -191,6 +212,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbPath;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.Label label4;
     }
 }
 

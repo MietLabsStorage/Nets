@@ -26,5 +26,11 @@ namespace MessageLib
 
         [JsonProperty("File")]
         public byte[] File { get; set; }
+
+        [JsonProperty("Users")]
+        public List<String> Users { get; set; }
+
+        [JsonProperty("IsSystemMes")]
+        public bool IsSystemMes { get; set; }
     }
 }

@@ -37,8 +37,8 @@ namespace Client
         {
             try
             {
-                (_myIp, _myPort) = EnsureServerAdressCorrect(tbMyAddress.Text);
-                (_serverIp, _serverPort) = EnsureServerAdressCorrect(tbSendAddress.Text);
+                (_myIp, _myPort) = EnsureAdressCorrect(tbMyAddress.Text);
+                (_serverIp, _serverPort) = EnsureAdressCorrect(tbSendAddress.Text);
 
                 _isConnected = !_isConnected;
                 UpdateFormItems();
@@ -48,6 +48,18 @@ namespace Client
                     _socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                     _listenTask = new Task(Listen);
                     _listenTask.Start();
+
+                    TextMessage message = new TextMessage()
+                    {
+                        Ip = _myIp,
+                        Port = _myPort,
+                        Name = tbName.Text,
+                        IsSystemMes = true
+                    };
+                    string json = JsonConvert.SerializeObject(message);
+                    byte[] data = Encoding.Unicode.GetBytes(json);
+                    EndPoint receiverEndPoint = new IPEndPoint(IPAddress.Parse(_serverIp), _serverPort);
+                    _socket.SendTo(data, receiverEndPoint);
                 }
                 else
                 {
@@ -61,7 +73,7 @@ namespace Client
             }
         }
 
-        private (string ip, int port) EnsureServerAdressCorrect(string serverAdress)
+        private (string ip, int port) EnsureAdressCorrect(string serverAdress)
         {
             if (Regex.IsMatch(serverAdress, @"^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{0,3}:[0-9]{1,5}$"))
             {
@@ -135,10 +147,11 @@ namespace Client
                     {
                         Ip = _myIp,
                         Port = _myPort,
-                        Name = $"Jhoe{_myPort}",
+                        Name = tbName.Text,
                         Message = tbMessage.Text,
                         FileName = lFileName.Text,
-                        File = _fileToSend
+                        File = _fileToSend,
+                        IsSystemMes = false
                     };
                     string json = JsonConvert.SerializeObject(message);
                     byte[] data = Encoding.Unicode.GetBytes(json);
