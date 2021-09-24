@@ -143,7 +143,7 @@
             this.tbPath.Name = "tbPath";
             this.tbPath.Size = new System.Drawing.Size(133, 20);
             this.tbPath.TabIndex = 10;
-            this.tbPath.Text = "С:\\\\";
+            this.tbPath.Text = "3001";
             // 
             // label3
             // 

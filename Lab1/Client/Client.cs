@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -40,7 +41,16 @@ namespace Client
                 (_myIp, _myPort) = EnsureAdressCorrect(tbMyAddress.Text);
                 (_serverIp, _serverPort) = EnsureAdressCorrect(tbSendAddress.Text);
 
-                _isConnected = !_isConnected;
+                if (Directory.Exists(tbPath.Text))
+                {
+                    _isConnected = !_isConnected;
+                }
+                else
+                {
+                    _isConnected = false;
+                    lbChat.Items.Add("Not directory");
+                }
+                
                 UpdateFormItems();
 
                 if (_isConnected)
@@ -67,9 +77,9 @@ namespace Client
                     _listenTask.Dispose();
                 }
             }
-            catch(Exception exception)
+            catch
             {
-                lbChat.Items.Add(exception.Message);
+
             }
         }
 
@@ -118,9 +128,16 @@ namespace Client
 
                     UiUpdate newMessage = () =>
                     {
-                        lbChat.Items.Add($"{DateTime.Now.ToString("dd.MM HH:mm:ss")} | {senderIpEndPoint.Address}:{senderIpEndPoint.Port} ({jsonMessage?.Value<string>("Name")}) | {jsonMessage?.Value<string>("Message")} | {jsonMessage?.Value<string>("FileName")}");
+                        lbChat.Items.Add($"{DateTime.Now.ToString("dd.MM HH:mm:ss")} | {jsonMessage?.Value<string>("Ip")}:{jsonMessage?.Value<string>("Port")} ({jsonMessage?.Value<string>("Name")}) | {jsonMessage?.Value<string>("Message")} | {jsonMessage?.Value<string>("FileName")}");
                     };
                     this.Invoke(newMessage);
+
+                    string filename = jsonMessage?.Value<string>("FileName") ?? $"{DateTime.Now.ToString("dd.MM HH:mm:ss")}";
+                    var blob = jsonMessage?.Value<string>("File");
+                    if (blob != null)
+                    {
+                        File.WriteAllBytes(Path.Combine(tbPath.Text, filename), blob.Select(_ => (byte)_).ToArray());
+                    }
                 }
             }
             catch (Exception exception)
@@ -150,7 +167,7 @@ namespace Client
                         Name = tbName.Text,
                         Message = tbMessage.Text,
                         FileName = lFileName.Text,
-                        File = _fileToSend,
+                        File = new string(_fileToSend.Select(_ => (char)_).ToArray()),
                         IsSystemMes = false
                     };
                     string json = JsonConvert.SerializeObject(message);
@@ -175,7 +192,6 @@ namespace Client
                 this.Invoke(errMessage);
             }
         }
-
 
         private void Close()
         {

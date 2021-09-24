@@ -25,7 +25,7 @@ namespace MessageLib
         public string FileName { get; set; }
 
         [JsonProperty("File")]
-        public byte[] File { get; set; }
+        public string File { get; set; }
 
         [JsonProperty("Users")]
         public List<String> Users { get; set; }
