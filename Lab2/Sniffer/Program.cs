@@ -1,55 +1,84 @@
-﻿using System;
+﻿using IcmpLib;
+using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Sniffer
 {
-    class Program
+    internal class Program
     {
-        private static Socket mainSocket;
-        private static byte[] buffer;
+        private static Socket _socket;
+        private static byte[] _buffer;
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            mainSocket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
 
             // Привязываем сокет к выбранному IP
-            mainSocket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0));
+            _socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0));
 
             //Устанавливаем опции у сокета
-            mainSocket.SetSocketOption(SocketOptionLevel.IP,  //Принимать только IP пакеты
+            _socket.SetSocketOption(SocketOptionLevel.IP, //Принимать только IP пакеты
                 SocketOptionName.HeaderIncluded, //Включать заголовок
                 true);
 
-            byte[] byTrue = { 1, 0, 0, 0};
-            byte[] byOut = new byte[4];
+            byte[] byTrue = {1, 0, 0, 0};
+            var byOut = new byte[4];
 
             //Socket.IOControl это аналог метода WSAIoctl в Winsock 2
-            mainSocket.IOControl(IOControlCode.ReceiveAll,  //SIO_RCVALL of Winsock
+            _socket.IOControl(IOControlCode.ReceiveAll, //SIO_RCVALL of Winsock
                 byTrue, byOut);
 
-            buffer=new byte[4096];
+            _buffer = new byte[4096];
 
             //Начинаем приём асинхронный приём пакетов
             while (true)
             {
-                mainSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None,
-                    new AsyncCallback(OnReceive), null);
+                try
+                {
+                    _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None,
+                        OnReceive, null);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
         }
 
         public static void OnReceive(IAsyncResult ar)
         {
-            int nReceived = mainSocket.EndReceive(ar);
+            try
+            {
+                var nReceived = _socket.EndReceive(ar);
 
-            /*ParseDataIcmp(buffer, nReceived);
+                IpHeader ipHeader = new IpHeader(_buffer, nReceived);
+                if (ipHeader.VerIhl != 0)
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
 
-            buffer = new byte[4096];
+                    stringBuilder.Append($"VerIhl: {ipHeader.VerIhl}\n");
+                    stringBuilder.Append($"Tos: {ipHeader.Tos}\n");
+                    stringBuilder.Append($"Tlen: {ipHeader.Tlen}\n");
+                    stringBuilder.Append($"Id: {ipHeader.Id}\n");
+                    stringBuilder.Append($"FlagsFo: {ipHeader.FlagsFo}\n");
+                    stringBuilder.Append($"Ttl: {ipHeader.Ttl}\n");
+                    stringBuilder.Append($"Proto: {ipHeader.Proto}\n");
+                    stringBuilder.Append($"Crc: {ipHeader.Crc}\n");
+                    stringBuilder.Append($"SrcAddr: {ipHeader.SrcAddr}\n");
+                    stringBuilder.Append($"DstAddr: {ipHeader.DstAddr}\n");
 
-            icmpListener.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None,
-                new AsyncCallback(OnReceiveIcmp), null);*/
+                    Console.WriteLine(stringBuilder);
+                }
 
-            Console.WriteLine(nReceived);
+                _buffer = new byte[4096];
+
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }

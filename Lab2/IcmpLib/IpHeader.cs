@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 
 namespace IcmpLib
 {
     public class IpHeader
     {
-        private byte VerIhl { get; set; } // Длина заголовка (4 бита)  (измеряется в словах по 32 бита) + Номер версии протокола (4 бита)
-        private byte Tos { get; set; } // Тип сервиса 
-        private ushort Tlen { get; set; } // Общая длина пакета 
-        private ushort Id { get; set; } // Идентификатор пакета
-        private ushort FlagsFo { get; set; } // Управляющие флаги (3 бита) + Смещение фрагмента (13 бит)
-        private byte Ttl { get; set; } // Время жизни пакета
-        private byte Proto { get; set; } // Протокол верхнего уровня 
-        private ushort Crc { get; set; } // CRC заголовка
-        private uint SrcAddr { get; set; } // IP-адрес отправителя
-        private uint DstAddr { get; set; } // IP-адрес получателя
+        public byte VerIhl { get; set; } // Длина заголовка (4 бита)  (измеряется в словах по 32 бита) + Номер версии протокола (4 бита)
+        public byte Tos { get; set; } // Тип сервиса 
+        public ushort Tlen { get; set; } // Общая длина пакета 
+        public ushort Id { get; set; } // Идентификатор пакета
+        public ushort FlagsFo { get; set; } // Управляющие флаги (3 бита) + Смещение фрагмента (13 бит)
+        public byte Ttl { get; set; } // Время жизни пакета
+        public byte Proto { get; set; } // Протокол верхнего уровня 
+        public ushort Crc { get; set; } // CRC заголовка
+        public uint SrcAddr { get; set; } // IP-адрес отправителя
+        public uint DstAddr { get; set; } // IP-адрес получателя
+
+        public byte[] Rest { get; set; }
 
         public static int TypeSize => (8 + 8 + 16 + 16 + 16 + 8 + 8 + 16 + 32 + 32) / 8;
 
@@ -34,6 +38,36 @@ namespace IcmpLib
             blob.AddRange(BitConverter.GetBytes(SrcAddr));
             blob.AddRange(BitConverter.GetBytes(DstAddr));
             return blob.ToArray();
+        }
+
+        public IpHeader(byte[] byBuffer, int nReceived)
+        {
+            try
+            {
+                MemoryStream memoryStream = new MemoryStream(byBuffer, 0, nReceived);
+                BinaryReader binaryReader = new BinaryReader(memoryStream);
+
+                VerIhl = binaryReader.ReadByte();
+                Tos = binaryReader.ReadByte();
+                Tlen = (ushort)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                Id = (ushort)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                FlagsFo = (ushort)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                Ttl = binaryReader.ReadByte();
+                Proto = binaryReader.ReadByte();
+                Crc = (ushort)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                SrcAddr = (uint)(binaryReader.ReadInt32());
+                DstAddr = (uint)(binaryReader.ReadInt32());
+                var byHeaderLength = VerIhl;
+                byHeaderLength <<= 4;
+                byHeaderLength >>= 4;
+                byHeaderLength *= 4;
+
+                Array.Copy(byBuffer, byHeaderLength, Rest, 0, Tlen - byHeaderLength);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         public static ushort SolveControlSum(ushort[] buffer, int length)
