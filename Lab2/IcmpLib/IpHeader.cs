@@ -3,17 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 
-namespace Lab2
+namespace IcmpLib
 {
     public class IpHeader
     {
-        private byte
-            VerIhl
-        {
-            get;
-            set;
-        } // Длина заголовка (4 бита)  (измеряется в словах по 32 бита) + Номер версии протокола (4 бита)
-
+        private byte VerIhl { get; set; } // Длина заголовка (4 бита)  (измеряется в словах по 32 бита) + Номер версии протокола (4 бита)
         private byte Tos { get; set; } // Тип сервиса 
         private ushort Tlen { get; set; } // Общая длина пакета 
         private ushort Id { get; set; } // Идентификатор пакета

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 
-namespace Lab2
+namespace IcmpLib
 {
     public class IcmpHeader
     {
@@ -23,6 +23,7 @@ namespace Lab2
             blob.Add(Byte);
             blob.Add(Code);
             blob.AddRange(BitConverter.GetBytes(ControlSum));
+            blob.AddRange(Rest);
             return blob.ToArray();
         }
 
