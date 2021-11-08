@@ -7,7 +7,7 @@ namespace IcmpLib
 {
     public class IcmpHeader
     {
-        public byte Byte { get; set; } = 0;
+        public byte Type { get; set; } = 0;
 
         public byte Code { get; set; } = 0;
 
@@ -20,7 +20,7 @@ namespace IcmpLib
         public byte[] Blob()
         {
             var blob = new List<byte>();
-            blob.Add(Byte);
+            blob.Add(Type);
             blob.Add(Code);
             blob.AddRange(BitConverter.GetBytes(ControlSum));
             blob.AddRange(Rest);

@@ -40,6 +40,8 @@ namespace IcmpLib
             return blob.ToArray();
         }
 
+        public IpHeader(){}
+
         public IpHeader(byte[] byBuffer, int nReceived)
         {
             try

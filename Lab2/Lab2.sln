@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IcmpLib", "IcmpLib\IcmpLib.csproj", "{9F9986D6-A93E-4D0A-8006-6DB68B0A1F00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IcmpLib", "IcmpLib\IcmpLib.csproj", "{9F9986D6-A93E-4D0A-8006-6DB68B0A1F00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sniffer", "Sniffer\Sniffer.csproj", "{4AEE3EEA-FF47-4754-976A-9D01E861B8E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sniffer", "Sniffer\Sniffer.csproj", "{4AEE3EEA-FF47-4754-976A-9D01E861B8E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IcmpGenerator", "IcmpGenerator\IcmpGenerator.csproj", "{96B84908-CDF2-41D0-A720-A2C1B980F5AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4AEE3EEA-FF47-4754-976A-9D01E861B8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AEE3EEA-FF47-4754-976A-9D01E861B8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AEE3EEA-FF47-4754-976A-9D01E861B8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96B84908-CDF2-41D0-A720-A2C1B980F5AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B84908-CDF2-41D0-A720-A2C1B980F5AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B84908-CDF2-41D0-A720-A2C1B980F5AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B84908-CDF2-41D0-A720-A2C1B980F5AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
