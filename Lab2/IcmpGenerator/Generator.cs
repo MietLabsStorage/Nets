@@ -92,6 +92,7 @@ namespace IcmpGenerator
                 _socket.SetSocketOption(SocketOptionLevel.IP, //Принимать только IP пакеты
                     SocketOptionName.HeaderIncluded, //Включать заголовок
                     true);
+
                 var coded = cbCode?.SelectedItem;
                 int code = 0;
                 if (coded is IcmpUnreachableCode) code = (int?) (IcmpUnreachableCode?) coded ?? 0;
@@ -110,7 +111,13 @@ namespace IcmpGenerator
                     Rest = rest
                 }, Array.Empty<byte>());
 
-                _socket.SendToAsync(blob, SocketFlags.None, new IPEndPoint(IPAddress.Parse(textBox7.Text), int.Parse(textBox8.Text)));
+                _socket.BeginConnect(new IPEndPoint(IPAddress.Parse(textBox7.Text), int.Parse(textBox8.Text)),
+                    new AsyncCallback(ConnectCallback), _socket);
+
+                _socket.BeginSend(blob, 0, blob.Length, 0, new AsyncCallback(ConnectCallback), _socket);
+
+                /*                _socket.Connect(new IPEndPoint(IPAddress.Parse(textBox7.Text), int.Parse(textBox8.Text)));
+                _socket.Send(blob, 0, blob.Length, SocketFlags.None);*/
  
             }
             catch (Exception exception)
@@ -120,6 +127,23 @@ namespace IcmpGenerator
             finally
             {
                 _socket?.Close();
+            }
+        }
+
+        private static void ConnectCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.  
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete the connection.  
+                client.EndConnect(ar);
+
+            }
+            catch (Exception e)
+            {
+                //ignore
             }
         }
     }

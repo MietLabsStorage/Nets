@@ -106,7 +106,7 @@ namespace IcmpGenerator
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(25, 23);
             this.textBox6.TabIndex = 7;
-            this.textBox6.Text = "1";
+            this.textBox6.Text = "101";
             // 
             // button1
             // 
@@ -124,7 +124,7 @@ namespace IcmpGenerator
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(25, 23);
             this.textBox8.TabIndex = 10;
-            this.textBox8.Text = "0";
+            this.textBox8.Text = "100";
             // 
             // textBox7
             // 

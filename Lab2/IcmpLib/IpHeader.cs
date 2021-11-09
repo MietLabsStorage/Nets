@@ -17,8 +17,8 @@ namespace IcmpLib
         public byte Ttl { get; set; } // Время жизни пакета
         public byte Proto { get; set; } // Протокол верхнего уровня 
         public ushort Crc { get; set; } // CRC заголовка
-        public uint SrcAddr { get; set; } // IP-адрес отправителя
-        public uint DstAddr { get; set; } // IP-адрес получателя
+        public uint SrcAddr { get; set; } = 16777343; // IP-адрес отправителя
+        public uint DstAddr { get; set; } = 16777343; // IP-адрес получателя
 
         public byte[] Rest { get; set; }
 

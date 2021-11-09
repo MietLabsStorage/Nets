@@ -16,7 +16,7 @@ namespace Sniffer
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Raw, ProtocolType.IP);
 
             // Привязываем сокет к выбранному IP
-            _socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 0));
+            _socket.Bind(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 100));
 
             //Устанавливаем опции у сокета
             _socket.SetSocketOption(SocketOptionLevel.IP, //Принимать только IP пакеты
