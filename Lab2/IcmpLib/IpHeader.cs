@@ -59,12 +59,7 @@ namespace IcmpLib
                 Crc = (ushort)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
                 SrcAddr = (uint)(binaryReader.ReadInt32());
                 DstAddr = (uint)(binaryReader.ReadInt32());
-                var byHeaderLength = VerIhl;
-                byHeaderLength <<= 4;
-                byHeaderLength >>= 4;
-                byHeaderLength *= 4;
-
-                Array.Copy(byBuffer, byHeaderLength, Rest, 0, Tlen - byHeaderLength);
+                Rest = binaryReader.ReadBytes(byBuffer.Length - IpHeader.TypeSize);
             }
             catch (Exception)
             {

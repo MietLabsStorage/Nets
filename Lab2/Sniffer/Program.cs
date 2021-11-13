@@ -1,8 +1,10 @@
 ﻿using IcmpLib;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 
 namespace Sniffer
 {
@@ -10,6 +12,7 @@ namespace Sniffer
     {
         private static Socket _socket;
         private static byte[] _buffer;
+        private static Config _config;
 
         private static void Main(string[] args)
         {
@@ -31,6 +34,8 @@ namespace Sniffer
                 byTrue, byOut);
 
             _buffer = new byte[4096];
+
+            _config = JsonSerializer.Deserialize<Config>(File.ReadAllText("config.json"));
 
             //Начинаем приём асинхронный приём пакетов
             while (true)
@@ -68,6 +73,63 @@ namespace Sniffer
                     stringBuilder.Append($"Crc: {ipHeader.Crc}\n");
                     stringBuilder.Append($"SrcAddr: {ipHeader.SrcAddr}\n");
                     stringBuilder.Append($"DstAddr: {ipHeader.DstAddr}\n");
+
+                    var rest = ipHeader.Rest;
+
+                    switch (ipHeader.Proto)
+                    {
+                        case 1:
+                            IcmpHeader icmpHeader = new IcmpHeader(rest, rest.Length);
+                            stringBuilder.Append("--icmp--\n");
+                            stringBuilder.Append($"Type: {icmpHeader.Type}\n");
+                            stringBuilder.Append($"Code: {icmpHeader.Code}\n");
+                            stringBuilder.Append($"ControlSum: {icmpHeader.ControlSum}\n");
+                            stringBuilder.Append($"Rest: {icmpHeader.Rest[0]} {icmpHeader.Rest[1]} {icmpHeader.Rest[2]} {icmpHeader.Rest[3]}\n");
+
+                            if (!_config.CheckIcmp)
+                            {
+                                stringBuilder.Clear();
+                            }
+                            break;
+
+                        case 6:
+                            TcpHeader tcpHeader = new TcpHeader(rest, rest.Length);
+                            stringBuilder.Append("--tcp--\n");
+                            stringBuilder.Append($"src_port: {tcpHeader.src_port}\n");
+                            stringBuilder.Append($"dst_port: {tcpHeader.dst_port}\n");
+                            stringBuilder.Append($"seq_n: {tcpHeader.seq_n}\n");
+                            stringBuilder.Append($"ack_n: {tcpHeader.ack_n}\n");
+                            stringBuilder.Append($"offset: {tcpHeader.offset}\n");
+                            stringBuilder.Append($"flags: {tcpHeader.flags}\n");
+                            stringBuilder.Append($"win: {tcpHeader.win}\n");
+                            stringBuilder.Append($"crc: {tcpHeader.crc}\n");
+                            stringBuilder.Append($"padding: {tcpHeader.padding}\n");
+                            if (!_config.CheckTcp)
+                            {
+                                stringBuilder.Clear();
+                            }
+                            break;
+
+                        case 17:
+                            UdpHeader udpHeader = new UdpHeader(rest, rest.Length);
+                            stringBuilder.Append("--udp--\n");
+                            stringBuilder.Append($"SrcPort: {udpHeader.SrcPort}\n");
+                            stringBuilder.Append($"DstPort: {udpHeader.DstPort}\n");
+                            stringBuilder.Append($"Length: {udpHeader.Length}\n");
+                            stringBuilder.Append($"ControlSum: {udpHeader.Crc}\n");
+                            if (!_config.CheckUdp)
+                            {
+                                stringBuilder.Clear();
+                            }
+                            break;
+
+                        default:
+                            if (!_config.CheckIp)
+                            {
+                                stringBuilder.Clear();
+                            }
+                            break;
+                    }
 
                     Console.WriteLine(stringBuilder);
                 }

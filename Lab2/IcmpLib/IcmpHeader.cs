@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 
 namespace IcmpLib
@@ -16,6 +18,29 @@ namespace IcmpLib
         public byte[] Rest { get; set; } = {0, 0, 0, 0};
 
         public static int TypeSize => (8 + 8 + 16 + 4 * 8) / 8;
+
+        public IcmpHeader() { }
+
+        public IcmpHeader(byte[] byBuffer, int nReceived)
+        {
+            try
+            {
+                MemoryStream memoryStream = new MemoryStream(byBuffer, 0, nReceived);
+                BinaryReader binaryReader = new BinaryReader(memoryStream);
+
+                Type = binaryReader.ReadByte();
+                Code = binaryReader.ReadByte();
+                ControlSum = (ushort)IPAddress.NetworkToHostOrder(binaryReader.ReadInt16());
+                Rest[0] = binaryReader.ReadByte();
+                Rest[1] = binaryReader.ReadByte();
+                Rest[2] = binaryReader.ReadByte();
+                Rest[3] = binaryReader.ReadByte();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
 
         public byte[] Blob()
         {
